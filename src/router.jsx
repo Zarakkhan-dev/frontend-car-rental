@@ -22,6 +22,7 @@ import CarBookingUpdate from "./components/carBooking/bookingUpdate";
 import CardUpdate from "./components/Card/cardUpdate";
 import FuelingUpdate from "./components/carFuel/fuelUpdate";
 import CarMaintenanceUpdate from "./components/Carmaintenance/maintainenceUpdate";
+import DriverDetailsForm from "./components/Driver/Driver";
 
 const router = createBrowserRouter([
 	{
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
 				path: "/car-booking",
 
 				element: <CarBookingForm />,
+			},
+			{
+				path : "/driver",
+				element : <DriverDetailsForm/>
 			},
 			{
 				path: "/car-bookingList",

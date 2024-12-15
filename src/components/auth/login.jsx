@@ -29,14 +29,19 @@ const [login] = useLoginMutation();
       try {
         const response = await login({ email, password }).unwrap();
         console.log(response);
-        alert("working")
-        // localStorage.setItem("accessToken", response.accessToken);
-        // localStorage.setItem("isLoggedIn", "true");
-        // navigate("/"); 
-    
+
+        if(response.success){
+          
+          localStorage.setItem("accessToken", response.user.accessToken);
+          navigate("/"); 
+        }
+        else{
+          
+          setError("Internal Error.")
+        }
       } catch (err) {
         // Handle error response
-        alert(err)
+        console.log(err)
         // setError(err.data?.message || "Invalid email or password.");
       }
     }
