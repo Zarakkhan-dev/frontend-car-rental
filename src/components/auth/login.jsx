@@ -30,9 +30,9 @@ const [login] = useLoginMutation();
         const response = await login({ email, password }).unwrap();
         console.log(response);
         alert("working")
-        // localStorage.setItem("accessToken", response.accessToken);
-        // localStorage.setItem("isLoggedIn", "true");
-        // navigate("/"); 
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("isLoggedIn", "true");
+        navigate("/"); 
     
       } catch (err) {
         // Handle error response

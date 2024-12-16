@@ -72,62 +72,62 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-// import { useGetAllCardsQuery } from "../../store/slices/cardsApiSlice";
-// import LoadingSpinner from "../loadingSpinner/loadingSpinner";
+import { useGetAllCardsQuery } from "../../store/slices/cardsApiSlice";
+import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 
 function CardPaymentList() {
-  const [paymentData, setpaymentData] = useState([]);
+  // const [paymentData, setpaymentData] = useState([]);
 
-  //   const { data: paymentData, error, isLoading } = useGetAllCardsQuery();
+    const { data: paymentData, error, isLoading } = useGetAllCardsQuery();
 
-  // if (isLoading) return <p><LoadingSpinner /></p>;
-  // if (error) return <p>Error fetching card data.</p>;
+  if (isLoading) return <p><LoadingSpinner /></p>;
+  if (error) return <p>Error fetching card data.</p>;
 
   // Dummy data for now, replace it with fetched data
-  useEffect(() => {
-    const dummyData = [
-      {
-        card_id: "1",
-        bank_name: "Bank of America",
-        holder_name: "John Doe",
-        card_number: "**** **** **** 1234",
-        card_charge: "$500",
-        due_date: "2024-01-15",
-        year_fee: "$100",
-        status: "Active",
-        paid_amount: "$300",
-        extra_pay: "$50",
-        less_pay: "$0",
-      },
-      {
-        card_id: "2",
-        bank_name: "Chase",
-        holder_name: "Jane Smith",
-        card_number: "**** **** **** 5678",
-        card_charge: "$800",
-        due_date: "2024-02-10",
-        year_fee: "$120",
-        status: "Inactive",
-        paid_amount: "$400",
-        extra_pay: "$30",
-        less_pay: "$10",
-      },
-      {
-        card_id: "3",
-        bank_name: "Citibank",
-        holder_name: "Alice Johnson",
-        card_number: "**** **** **** 4321",
-        card_charge: "$700",
-        due_date: "2024-03-05",
-        year_fee: "$150",
-        status: "Active",
-        paid_amount: "$500",
-        extra_pay: "$60",
-        less_pay: "$0",
-      },
-    ];
-    setpaymentData(dummyData);
-  }, []); // Empty dependency array ensures this runs only once.
+  // useEffect(() => {
+  //   const dummyData = [
+  //     {
+  //       card_id: "1",
+  //       bank_name: "Bank of America",
+  //       holder_name: "John Doe",
+  //       card_number: "**** **** **** 1234",
+  //       card_charge: "$500",
+  //       due_date: "2024-01-15",
+  //       year_fee: "$100",
+  //       status: "Active",
+  //       paid_amount: "$300",
+  //       extra_pay: "$50",
+  //       less_pay: "$0",
+  //     },
+  //     {
+  //       card_id: "2",
+  //       bank_name: "Chase",
+  //       holder_name: "Jane Smith",
+  //       card_number: "**** **** **** 5678",
+  //       card_charge: "$800",
+  //       due_date: "2024-02-10",
+  //       year_fee: "$120",
+  //       status: "Inactive",
+  //       paid_amount: "$400",
+  //       extra_pay: "$30",
+  //       less_pay: "$10",
+  //     },
+  //     {
+  //       card_id: "3",
+  //       bank_name: "Citibank",
+  //       holder_name: "Alice Johnson",
+  //       card_number: "**** **** **** 4321",
+  //       card_charge: "$700",
+  //       due_date: "2024-03-05",
+  //       year_fee: "$150",
+  //       status: "Active",
+  //       paid_amount: "$500",
+  //       extra_pay: "$60",
+  //       less_pay: "$0",
+  //     },
+  //   ];
+  //   setpaymentData(dummyData);
+  // }, []); // Empty dependency array ensures this runs only once.
 
   // Handle delete functionality
   const handleDelete = (card_id) => {

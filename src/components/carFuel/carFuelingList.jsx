@@ -105,32 +105,32 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-// import { useGetAllFuelingsQuery } from "../../store/slices/fuelingApiSlice";
-// import LoadingSpinner from "../loadingSpinner/loadingSpinner";
+import { useGetAllFuelingsQuery } from "../../store/slices/fuelingApiSlice";
+import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 
 function FuelingList() {
   // Sample data for now, replace it with fetched data
-  const [fuelingData, setFuelingData] = useState([
-    {
-      fueling_id: 1,
-      customer_paid_by: "JohnDoe",
-      verified: "ABC Rentals",
-      total_amount_paid: 150,
-      remaining_amount_left: 50,
-      bill_paid: "Yes",
-      created_at: "2024-01-10",
-    },
-    {
-      fueling_id: 2,
-      customer_paid_by: "Alice123",
-      verified: "XYZ Rentals",
-      total_amount_paid: 200,
-      remaining_amount_left: 30,
-      bill_paid: "No",
-      created_at: "2024-02-01",
-    },
-    // Add more mock entries if needed
-  ]);
+  // const [fuelingData, setFuelingData] = useState([
+  //   {
+  //     fueling_id: 1,
+  //     customer_paid_by: "JohnDoe",
+  //     verified: "ABC Rentals",
+  //     total_amount_paid: 150,
+  //     remaining_amount_left: 50,
+  //     bill_paid: "Yes",
+  //     created_at: "2024-01-10",
+  //   },
+  //   {
+  //     fueling_id: 2,
+  //     customer_paid_by: "Alice123",
+  //     verified: "XYZ Rentals",
+  //     total_amount_paid: 200,
+  //     remaining_amount_left: 30,
+  //     bill_paid: "No",
+  //     created_at: "2024-02-01",
+  //   },
+  //   // Add more mock entries if needed
+  // ]);
 
   // Handle delete logic (this can be replaced with an actual API call or Redux action)
   const handleDelete = (fueling_id) => {
@@ -139,13 +139,13 @@ function FuelingList() {
   };
 
   // Handle loading and error states (uncomment when API is in use)
-  // const { data: fuelingData, error, isLoading } = useGetAllFuelingsQuery();
-  // if (isLoading) {
-  //   return <div><LoadingSpinner /></div>;
-  // }
-  // if (error) {
-  //   return <div>Error loading fueling data!</div>;
-  // }
+  const { data: fuelingData, error, isLoading } = useGetAllFuelingsQuery();
+  if (isLoading) {
+    return <div><LoadingSpinner /></div>;
+  }
+  if (error) {
+    return <div>Error loading fueling data!</div>;
+  }
 
   return (
     <div className="p-6 bg-gray-100 overflow-hidden">

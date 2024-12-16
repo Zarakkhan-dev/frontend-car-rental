@@ -64,61 +64,62 @@ import React, { useState } from "react";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useGetAllMaintenanceRecordsQuery } from "../../store/slices/maintenancesApiSlice";
 
 function CarMaintenenceList() {
   // Fetching data using the API query hook
-  // const { data: serviceData, isLoading, isError, error } = useGetAllMaintenanceRecordsQuery();
+  const { data: serviceData, isLoading, isError, error } = useGetAllMaintenanceRecordsQuery();
 
-  // if (isLoading) {
-  //   return <div><LoadingSpinner/></div>;
-  // }
+  if (isLoading) {
+    return <div><LoadingSpinner/></div>;
+  }
 
-  // if (isError) {
-  //   return <div>Error: {error.message}</div>;
-  // }
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
 
   // Dummy data for display
-  const [serviceData, setServiceData] = useState([
-    {
-      car_id: "CAR123",
-      date: "2024-01-10",
-      chassis_no: "CH12345",
-      engine: "V6",
-      reg_no: "REG456",
-      cell: "123-456-7890",
-      type: "Routine Maintenance",
-      labour: "John Doe",
-      total_labour_cost: 200,
-      total_parts_cost: 150,
-      grand_total: 350,
-    },
-    {
-      car_id: "CAR456",
-      date: "2024-01-12",
-      chassis_no: "CH67890",
-      engine: "V8",
-      reg_no: "REG789",
-      cell: "987-654-3210",
-      type: "Repair",
-      labour: "Jane Smith",
-      total_labour_cost: 300,
-      total_parts_cost: 250,
-      grand_total: 550,
-    },
-    {
-      car_id: "CAR789",
-      date: "2024-01-15",
-      chassis_no: "CH11223",
-      engine: "Electric",
-      reg_no: "REG123",
-      cell: "456-789-0123",
-      type: "Battery Replacement",
-      labour: "Alice Johnson",
-      total_labour_cost: 100,
-      total_parts_cost: 400,
-      grand_total: 500,
-    },
-  ]);
+  // const [serviceData, setServiceData] = useState([
+  //   {
+  //     car_id: "CAR123",
+  //     date: "2024-01-10",
+  //     chassis_no: "CH12345",
+  //     engine: "V6",
+  //     reg_no: "REG456",
+  //     cell: "123-456-7890",
+  //     type: "Routine Maintenance",
+  //     labour: "John Doe",
+  //     total_labour_cost: 200,
+  //     total_parts_cost: 150,
+  //     grand_total: 350,
+  //   },
+  //   {
+  //     car_id: "CAR456",
+  //     date: "2024-01-12",
+  //     chassis_no: "CH67890",
+  //     engine: "V8",
+  //     reg_no: "REG789",
+  //     cell: "987-654-3210",
+  //     type: "Repair",
+  //     labour: "Jane Smith",
+  //     total_labour_cost: 300,
+  //     total_parts_cost: 250,
+  //     grand_total: 550,
+  //   },
+  //   {
+  //     car_id: "CAR789",
+  //     date: "2024-01-15",
+  //     chassis_no: "CH11223",
+  //     engine: "Electric",
+  //     reg_no: "REG123",
+  //     cell: "456-789-0123",
+  //     type: "Battery Replacement",
+  //     labour: "Alice Johnson",
+  //     total_labour_cost: 100,
+  //     total_parts_cost: 400,
+  //     grand_total: 500,
+  //   },
+  // ]);
 
   // Handle delete logic (this can be replaced with an actual API call or Redux action)
   const handleDelete = (car_id) => {

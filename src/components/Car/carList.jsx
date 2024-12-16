@@ -161,49 +161,49 @@ import { useGetAllCarsQuery } from "../../store/slices/carsApiSlice";
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 
 function CarDetailsTable() {
-// const { data: carsData, error, isLoading } = useGetAllCarsQuery();
+const { data: carsData, error, isLoading } = useGetAllCarsQuery();
 
   const [carDetails, setCarDetails] = useState([]);
 
   // Set dummy data
-  useEffect(() => {
-    const dummyData = [
-      {
-        id: 1,
-        make: "Toyota",
-        model: "Corolla",
-        variant: "SE",
-        registration_no: "ABC123",
-        insurance_document: "https://example.com/insurance1.pdf",
-        id_card_document: "https://example.com/idcard1.pdf",
-        created_at: "2024-01-01T10:00:00Z",
-      },
-      {
-        id: 2,
-        make: "Honda",
-        model: "Civic",
-        variant: "LX",
-        registration_no: "DEF456",
-        insurance_document: null,
-        id_card_document: "https://example.com/idcard2.pdf",
-        created_at: "2024-02-01T15:30:00Z",
-      },
-      {
-        id: 3,
-        make: "Ford",
-        model: "Focus",
-        variant: "Titanium",
-        registration_no: "GHI789",
-        insurance_document: "https://example.com/insurance3.pdf",
-        id_card_document: null,
-        created_at: "2024-03-01T08:45:00Z",
-      },
-    ];
-    setCarDetails(dummyData);
-  }, []);
+  // useEffect(() => {
+  //   const dummyData = [
+  //     {
+  //       id: 1,
+  //       make: "Toyota",
+  //       model: "Corolla",
+  //       variant: "SE",
+  //       registration_no: "ABC123",
+  //       insurance_document: "https://example.com/insurance1.pdf",
+  //       id_card_document: "https://example.com/idcard1.pdf",
+  //       created_at: "2024-01-01T10:00:00Z",
+  //     },
+  //     {
+  //       id: 2,
+  //       make: "Honda",
+  //       model: "Civic",
+  //       variant: "LX",
+  //       registration_no: "DEF456",
+  //       insurance_document: null,
+  //       id_card_document: "https://example.com/idcard2.pdf",
+  //       created_at: "2024-02-01T15:30:00Z",
+  //     },
+  //     {
+  //       id: 3,
+  //       make: "Ford",
+  //       model: "Focus",
+  //       variant: "Titanium",
+  //       registration_no: "GHI789",
+  //       insurance_document: "https://example.com/insurance3.pdf",
+  //       id_card_document: null,
+  //       created_at: "2024-03-01T08:45:00Z",
+  //     },
+  //   ];
+  //   setCarDetails(dummyData);
+  // }, []);
 
-  //  if (isLoading) return <p><LoadingSpinner/></p>;
-  // if (error) return <p>Error loading car Details</p>;
+   if (isLoading) return <p><LoadingSpinner/></p>;
+  if (error) return <p>Error loading car Details</p>;
 
   const handleDelete = (id) => {
     console.log(`Deleting car detail with ID: ${id}`);
