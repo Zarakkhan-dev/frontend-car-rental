@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { 
@@ -8,16 +8,14 @@ import {
 import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 
 function CardPaymentList() {
-  // Query hook to fetch all card payment data
   const { data: paymentData, error, isLoading, refetch } = useGetAllCardsQuery();
-  const [deleteCard] = useDeleteCardMutation(); // Mutation hook for deleting a card
+  const [deleteCard] = useDeleteCardMutation();
 
-  // Function to handle card deletion
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this card?")) {
       try {
-        await deleteCard(id).unwrap(); // Perform delete operation
-        refetch(); // Refresh the list after deletion
+        await deleteCard(id).unwrap(); 
+        refetch();
         alert("Card detail deleted successfully.");
       } catch (error) {
         console.error("Error deleting card:", error);
@@ -27,7 +25,7 @@ function CardPaymentList() {
   };
 
   useEffect(() => {
-    refetch(); // Refetch data on component mount
+    refetch();
   }, [refetch]);
 
   if (isLoading) return <LoadingSpinner />;
@@ -55,44 +53,43 @@ function CardPaymentList() {
             </tr>
           </thead>
           <tbody>
-            {paymentData.data && paymentData.data.length > 0 ? (
-              paymentData.data.map((data, index) => {
-              
+            {paymentData?.data?.cards?.length > 0 ? (
+              paymentData.data.cards.map((card, index) => (
                 <tr
-                  key={data.card_id}
+                  key={card.id}
                   className={`${
                     index % 2 === 0 ? "bg-white" : "bg-gray-50"
                   } hover:bg-gray-100`}
                 >
-                  <td className="px-4 py-3 border-t border-gray-200">{data.card_id}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">{data.bank_name}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">{data.holder_name}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">{data.card_number}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${data.card_charge}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">{data.due_date}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${data.year_fee}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">{data.status}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${data.paid_amount}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${data.extra_pay}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${data.less_pay}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.id}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.bank_name}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.holder_name}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.card_number}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">${card.card_charge}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">
+                    {new Date(card.due_date).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 border-t border-gray-200">${card.year_fee}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.status}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">${card.paid_amount}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">${card.extra_pay}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">${card.less_pay}</td>
                   <td className="px-4 py-3 border-t border-gray-200 flex gap-3 text-center">
-                    {/* Edit Link */}
                     <Link
-                      to={`/CardUpdate/${data.card_id}`}
+                      to={`/CardUpdate/${card.id}`}
                       className="text-gray-500 hover:text-gray-700"
                     >
                       <FaEdit className="w-5 h-5" />
                     </Link>
-                    {/* Delete Button */}
                     <button
-                      onClick={() => handleDelete(data.card_id)}
+                      onClick={() => handleDelete(card.id)}
                       className="text-red-500 hover:text-red-700"
                     >
                       <FaTrash className="w-5 h-5" />
                     </button>
                   </td>
                 </tr>
-              })
+              ))
             ) : (
               <tr>
                 <td

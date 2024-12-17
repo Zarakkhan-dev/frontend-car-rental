@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams,} from "react-router-dom";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 function UpdateCarForm() {
   const { id } = useParams();
   alert(id)
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     make: "",
@@ -57,13 +56,6 @@ function UpdateCarForm() {
     for (const key in formData) {
       formDataToSend.append(key, formData[key]);
     }
-
-    await fetch(`/api/cars/${id}`, {
-      method: "PUT", // Update method
-      body: formDataToSend,
-    });
-
-    navigate("/"); // Redirect to the car list page after successful update
   };
 
   return (
