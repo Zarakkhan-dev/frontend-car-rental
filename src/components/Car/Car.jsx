@@ -5,6 +5,7 @@ import { useCreateCarMutation } from "../../store/slices/carsApiSlice";
 function CarDetailsForm() {
   const [createCar, { isLoading, isError, isSuccess, error}] =
     useCreateCarMutation();
+    
 
   const [formData, setFormData] = useState({
     make: "",
@@ -47,12 +48,12 @@ function CarDetailsForm() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formDataToSend = new FormData();
     for (const key in formData) {
       formDataToSend.append(key, formData[key]);
     }
-
+  
     try {
       const response = await createCar({
         make: formData.make,
@@ -61,9 +62,8 @@ function CarDetailsForm() {
         registration_no: formData.registration_no,
         documents: [{ insurance: "", id_card: "" }],
       }).unwrap();
-      
-      refetch()
-      if(response.status ==='success'){
+  
+      if (response.status === "success") {
         setFormData({
           make: "",
           model: "",
@@ -72,16 +72,16 @@ function CarDetailsForm() {
           insurance: "",
           id_card: "",
         });
-        alert("Car Detail sucessfully added")
-      }
-      else{
-        alert("Internal Error")
+        alert("Car Detail successfully added");
+      } else {
+        alert("Internal Error");
       }
     } catch (err) {
       console.error("Error submitting car details:", err);
       alert("Failed to submit car details. Please try again.");
     }
   };
+  
 
   return (
     <>
