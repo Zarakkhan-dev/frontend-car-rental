@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { useCreateBookingMutation } from '../../store/slices/bookingsApi';
+import DriverDetails from '../driverDetail/carDriver';
 
 function CarBookingForm() {
   const [createBooking] = useCreateBookingMutation();
   const [formData, setFormData] = useState({
-    car_id: '',
+    registration_no: '',
     username: '',
     company_name: '',
     start_date: '',
@@ -92,17 +93,23 @@ function CarBookingForm() {
 
           {/* Form Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div className="col-span-1">
-              <label className="block text-gray-500 font-medium">Car ID</label>
-              <input
-                type="text"
-                name="car_id"
-                value={formData.car_id}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                required
-              />
-            </div>
+          
+          <div className="col-span-1">
+  <label className="block text-gray-500 font-medium">Registration No</label>
+  <select
+    name="registration_no" // Update this to match formData's key
+    value={formData.registration_no} // Ensure this binds correctly
+    onChange={handleChange}
+    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+    required
+  >
+    <option value="">Select Registration No</option> {/* Placeholder option */}
+    <option value="ABC123">ABC123</option>
+    <option value="XYZ456">XYZ456</option>
+    <option value="LMN789">LMN789</option>
+  </select>
+</div>
+
 
             <div className="col-span-1">
               <label className="block text-gray-500 font-medium">Username</label>
@@ -212,62 +219,14 @@ function CarBookingForm() {
             <label className="text-gray-500 font-medium">With Driver</label>
           </div>
 
-          {formData.with_driver && (
-            <div className="mt-4 space-y-4">
-              <h3 className="text-lg font-medium text-gray-500">Driver Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-gray-500 font-medium">Booking ID</label>
-                  <input
-                    type="text"
-                    name="id"
-                    value={formData.driver_details.id}
-                    onChange={handleDriverChange}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-500 font-medium">Driver Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.driver_details.name}
-                    onChange={handleDriverChange}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-500 font-medium">Driver License</label>
-                  <input
-                    type="text"
-                    name="license"
-                    value={formData.driver_details.license}
-                    onChange={handleDriverChange}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-500 font-medium">
-                    Identity Card Number
-                  </label>
-                  <input
-                    type="text"
-                    name="identity_card_number"
-                    value={formData.driver_details.identity_card_number}
-                    onChange={handleDriverChange}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          <div>
+      {formData.with_driver && (
+        <DriverDetails
+          driverDetails={formData.driver_details}
+          onChange={handleDriverChange}
+        />
+      )}
+    </div>
 
           <button
             type="submit"

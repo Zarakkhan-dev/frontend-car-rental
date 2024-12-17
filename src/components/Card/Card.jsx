@@ -1,6 +1,4 @@
-
-
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useCreateCardMutation } from '../../store/slices/cardsApiSlice';
 
 const CardDetails = () => {
@@ -23,7 +21,7 @@ const [createCard] = useCreateCardMutation();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    if (validationError) setValidationError(''); // Clear validation error on input change
+    if (validationError) setValidationError(''); 
   };
 
   const handleSubmit = async(e) => {

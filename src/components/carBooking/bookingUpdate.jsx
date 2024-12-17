@@ -5,7 +5,7 @@ import { useCreateBookingMutation } from '../../store/slices/bookingsApi';
 function CarBookingUpdate() {
   const [createBooking] = useCreateBookingMutation();
   const [formData, setFormData] = useState({
-    car_id: '',
+    registration_no: '',
     username: '',
     company_name: '',
     start_date: '',
@@ -93,11 +93,11 @@ function CarBookingUpdate() {
           {/* Form Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div className="col-span-1">
-              <label className="block text-gray-500 font-medium">Car ID</label>
+              <label className="block text-gray-500 font-medium">Registration No</label>
               <input
                 type="text"
                 name="car_id"
-                value={formData.car_id}
+                value={formData.registration_no}
                 onChange={handleChange}
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
                 required
