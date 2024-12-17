@@ -1,34 +1,36 @@
-import React, { useState } from 'react';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
-import { useCreateBookingMutation } from '../../store/slices/bookingsApi';
-import DriverDetails from '../driverDetail/carDriver';
+import { useEffect, useState } from "react";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { useCreateBookingMutation } from "../../store/slices/bookingsApi";
+import DriverDetails from "../driverDetail/carDriver";
+import { useGetAllCarsQuery } from "../../store/slices/carsApiSlice";
 
 function CarBookingForm() {
   const [createBooking] = useCreateBookingMutation();
+  const { data: carsData, error, isLoading, refetch } = useGetAllCarsQuery();
   const [formData, setFormData] = useState({
-    registration_no: '',
-    username: '',
-    company_name: '',
-    start_date: '',
-    end_date: '',
+    registration_no: "",
+    username: "",
+    company_name: "",
+    start_date: "",
+    end_date: "",
     price_per_day: 0,
     price_per_month: 0,
     agreement: null,
     car_pictures: null,
     with_driver: false,
     driver_details: {
-      id: '',
-      name: '',
-      license: '',
-      identity_card_number: ''
-    }
+      id: "",
+      name: "",
+      license: "",
+      identity_card_number: "",
+    },
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : files ? files[0] : value
+      [name]: type === "checkbox" ? checked : files ? files[0] : value,
     }));
   };
 
@@ -36,207 +38,223 @@ function CarBookingForm() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      driver_details: { ...prevData.driver_details, [name]: value }
+      driver_details: { ...prevData.driver_details, [name]: value },
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     try {
-      const bookingData = { ...formData };
       const formDataToSend = new FormData();
-      
-      // Add form data to FormData object for file uploads
-      Object.keys(bookingData).forEach((key) => {
-        if (key === 'agreement' || key === 'car_pictures') {
-          formDataToSend.append(key, bookingData[key]);
+      Object.keys(formData).forEach((key) => {
+        if (key === "driver_details") {
+          Object.keys(formData.driver_details).forEach((subKey) => {
+            formDataToSend.append(`driver_details[${subKey}]`, formData.driver_details[subKey]);
+          });
+        } else if (key === "agreement" || key === "car_pictures") {
+          formDataToSend.append(key, formData[key]);
         } else {
-          formDataToSend.append(key, bookingData[key]);
+          formDataToSend.append(key, formData[key]);
         }
       });
 
-      // Call the mutation to create the booking
       const result = await createBooking(formDataToSend).unwrap();
-      console.log('Booking created successfully:', result);
-      // Optionally, handle successful form submission (e.g., show a success message)
+      console.log("Booking created successfully:", result);
+      alert("Booking created successfully!");
     } catch (err) {
-      console.error('Error creating booking:', err);
-      // Optionally, handle errors (e.g., show an error message)
+      console.error("Error creating booking:", err);
+      alert("Error creating booking. Please try again.");
     }
   };
 
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
+  if (isLoading) {
+    return <p>Loading cars...</p>;
+  }
+
+  if (error) {
+    return <p>Error fetching cars: {error.message}</p>;
+  }
+
   return (
-    <>
-      <div className="flex justify-center ">
-        <form
-          onSubmit={handleSubmit}
-          className="p-6 bg-gray-200 rounded-lg shadow-lg w-full  "
-        >
-          {/* Car Image */}
-          <div className="w-full h-56 overflow-hidden rounded-md relative mb-6">
-            <img
-              src="https://deinfa.com/wp-content/uploads/2024/06/A-Guide-to-Electric-Cars-in-Pakistan-Featured-Image.png"
-              alt="Car"
-              className="object-cover w-full h-full"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-2xl font-bold">
-              Book Your Car Now!
-            </div>
+    <div className="flex justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="p-6 bg-gray-200 rounded-lg shadow-lg w-full"
+      >
+        {/* Car Image */}
+        <div className="w-full h-56 overflow-hidden rounded-md relative mb-6">
+          <img
+            src="https://deinfa.com/wp-content/uploads/2024/06/A-Guide-to-Electric-Cars-in-Pakistan-Featured-Image.png"
+            alt="Car"
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-2xl font-bold">
+            Book Your Car Now!
           </div>
+        </div>
 
-          <h1 className="text-xl font-bold text-gray-600 flex items-center gap-2">
-            <AiOutlineExclamationCircle />
-            Car Booking
-          </h1>
-          <div className="border-b border-gray-300 mt-2"></div>
+        <h1 className="text-xl font-bold text-gray-600 flex items-center gap-2">
+          <AiOutlineExclamationCircle />
+          Car Booking
+        </h1>
+        <div className="border-b border-gray-300 mt-2"></div>
 
-          {/* Form Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div className="col-span-1">
-  <label className="block text-gray-500 font-medium">Registration No</label>
-  <select
-    name="registration_no" // Update this to match formData's key
-    value={formData.registration_no} // Ensure this binds correctly
-    onChange={handleChange}
-    className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-    required
-  >
-    <option value="">Select Registration No</option> {/* Placeholder option */}
-    <option value="ABC123">ABC123</option>
-    <option value="XYZ456">XYZ456</option>
-    <option value="LMN789">LMN789</option>
-  </select>
-</div>
-
-
-            <div className="col-span-1">
-              <label className="block text-gray-500 font-medium">Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                required
-              />
-            </div>
-
-            <div className="col-span-1 md:col-span-2 w-full md:w-[49%] ">
-              <label className="block text-gray-500 font-medium">
-                Company Name
-              </label>
-              <input
-                type="text"
-                name="company_name"
-                value={formData.company_name}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-500 font-medium">Start Date</label>
-              <input
-                type="date"
-                name="start_date"
-                value={formData.start_date}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-500 font-medium">End Date</label>
-              <input
-                type="date"
-                name="end_date"
-                value={formData.end_date}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-                required
-              />
-            </div>
-
-            <div className="col-span-1">
-              <label className="block text-gray-500 font-medium">Price per Day</label>
-              <input
-                type="number"
-                name="price_per_day"
-                value={formData.price_per_day}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-              />
-            </div>
-
-            <div className="col-span-1">
-              <label className="block text-gray-500 font-medium">Price per Month</label>
-              <input
-                type="number"
-                name="price_per_month"
-                value={formData.price_per_month}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-              />
-            </div>
+            <label className="block text-gray-500 font-medium">
+              Registration No
+            </label>
+            <select
+              name="registration_no"
+              value={formData.registration_no}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+              required
+            >
+              <option value="">Select Registration No</option>
+              {carsData?.data?.length > 0 ? (
+                carsData.data.map((car) => (
+                  <option value={car.registration_no} key={car.id}>
+                    {car.registration_no}
+                  </option>
+                ))
+              ) : (
+                <option value="null">No cars found</option>
+              )}
+            </select>
+          </div>
+          <div className="col-span-1">
+            <label className="block text-gray-500 font-medium">Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+              required
+            />
           </div>
 
-          <div className="mt-4">
+          <div className="col-span-1 md:col-span-2">
             <label className="block text-gray-500 font-medium">
-              Agreement Document
+              Company Name
             </label>
             <input
-              type="file"
-              name="agreement"
+              type="text"
+              name="company_name"
+              value={formData.company_name}
               onChange={handleChange}
-              className="w-full mt-1 p-2"
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
             />
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-gray-500 font-medium">Car Pictures</label>
-            <input
-              type="file"
-              name="car_pictures"
-              onChange={handleChange}
-              className="w-full mt-1 p-2"
-              required
-            />
-          </div>
-
-          <div className="flex items-center  mt-4">
-            <input
-              type="checkbox"
-              name="with_driver"
-              checked={formData.with_driver}
-              onChange={handleChange}
-              className="mr-2"
-            />
-            <label className="text-gray-500 font-medium">With Driver</label>
           </div>
 
           <div>
-      {formData.with_driver && (
-        <DriverDetails
-          driverDetails={formData.driver_details}
-          onChange={handleDriverChange}
-        />
-      )}
-    </div>
+            <label className="block text-gray-500 font-medium">Start Date</label>
+            <input
+              type="date"
+              name="start_date"
+              value={formData.start_date}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+              required
+            />
+          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-[#192236] text-white py-2 rounded-md mt-4"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    </>
+          <div>
+            <label className="block text-gray-500 font-medium">End Date</label>
+            <input
+              type="date"
+              name="end_date"
+              value={formData.end_date}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+              required
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-gray-500 font-medium">
+              Price per Day
+            </label>
+            <input
+              type="number"
+              name="price_per_day"
+              value={formData.price_per_day}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+            />
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-gray-500 font-medium">
+              Price per Month
+            </label>
+            <input
+              type="number"
+              name="price_per_month"
+              value={formData.price_per_month}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-gray-500 font-medium">
+            Agreement Document
+          </label>
+          <input
+            type="file"
+            name="agreement"
+            onChange={handleChange}
+            className="w-full mt-1 p-2"
+            required
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-gray-500 font-medium">Car Pictures</label>
+          <input
+            type="file"
+            name="car_pictures"
+            onChange={handleChange}
+            className="w-full mt-1 p-2"
+            required
+          />
+        </div>
+
+        <div className="flex items-center mt-4">
+          <input
+            type="checkbox"
+            name="with_driver"
+            checked={formData.with_driver}
+            onChange={handleChange}
+            className="mr-2"
+          />
+          <label className="text-gray-500 font-medium">With Driver</label>
+        </div>
+
+        {formData.with_driver && (
+          <DriverDetails
+            driverDetails={formData.driver_details}
+            onChange={handleDriverChange}
+          />
+        )}
+
+        <button
+          type="submit"
+          className="w-full bg-[#192236] text-white py-2 rounded-md mt-4"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }
 
