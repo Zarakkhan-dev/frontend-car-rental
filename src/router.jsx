@@ -23,6 +23,7 @@ import CardUpdate from "./components/Card/cardUpdate";
 import FuelingUpdate from "./components/carFuel/fuelUpdate";
 import CarMaintenanceUpdate from "./components/Carmaintenance/maintainenceUpdate";
 import DriverDetailsForm from "./components/Driver/Driver";
+import DriverDetailsTable from "./components/Driver/driverList";
 
 const router = createBrowserRouter([
 	{
@@ -81,6 +82,21 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/UpdateCarForm/:id",
+
+				element: <UpdateCarForm />,
+			},
+			{
+				path: "/Driver-Detail",
+
+				element: <DriverDetailsForm />,
+			},
+			{
+				path: "/Driver-DetailList",
+
+				element: <DriverDetailsTable />,
+			},
+			{
+				path: "/UpdateDriverForm/:id",
 
 				element: <UpdateCarForm />,
 			},

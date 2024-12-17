@@ -68,7 +68,7 @@ function DriverDetailsTable() {
                     <td className="px-4 py-3 border-t border-gray-200">{detail.phone_number}</td>
                     <td className="px-4 py-3 border-t border-gray-200 flex gap-3 text-center">
                       <Link
-                        to={`/UpdateDriver/${detail.id}`}
+                        to={`/UpdateDriverForm/${detail.id}`}
                         className="text-gray-500 hover:text-gray-700"
                       >
                         <FaEdit className="w-5 h-5" />

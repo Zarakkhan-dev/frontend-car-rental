@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { useGetAllCarsQuery, useUpdateCarMutation } from "../../store/slices/carsApiSlice";
 
 function UpdateCarForm() {
   const { id } = useParams();
-  alert(id)
   const navigate = useNavigate();
+  const [updateCar] = useUpdateCarMutation();
 
   const [formData, setFormData] = useState({
     make: "",
@@ -16,27 +17,25 @@ function UpdateCarForm() {
     id_card: null,
   });
 
-  useEffect(() => {
-    // Fetch existing car details based on `id` and populate formData
-    const fetchCarDetails = async () => {
-      const response = await fetch(`/api/cars/${id}`); // Replace with actual API endpoint
-      const data = await response.json();
-      setFormData({
-        make: data.make,
-        model: data.model,
-        variant: data.variant,
-        registration_no: data.registration_no,
-        insurance: data.insurance,
-        id_card: data.id_card,
-      });
-    };
+  // Fetch car details from the API
+  const  { data: carDetails, error, isLoading } = useGetAllCarsQuery(id);
+console.log("show update car details",carDetails);
 
-    fetchCarDetails();
-  }, [id]);
+  useEffect(() => {
+    if (carDetails) {
+      setFormData({
+        make: carDetails.make,
+        model: carDetails.model,
+        variant: carDetails.variant,
+        registration_no: carDetails.registration_no,
+        insurance: carDetails.documents?.insurance || null,
+        id_card: carDetails.documents?.id_card || null,
+      });
+    }
+  }, [carDetails]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (files) {
       setFormData((prevData) => ({
         ...prevData,
@@ -52,19 +51,29 @@ function UpdateCarForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+    if (!carDetails.make || !carDetails.model || !carDetails.registration_no) {
+      alert("Please fill in all required fields.");
+      return;
     }
 
-    await fetch(`/api/cars/${id}`, {
-      method: "PUT", // Update method
-      body: formDataToSend,
-    });
+    try {
+      const formDataToSend = new FormData();
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
 
-    navigate("/"); // Redirect to the car list page after successful update
+      // Send form data to the server
+      await updateCar({ id, formData: formDataToSend }).unwrap();
+      alert("Car details updated successfully!");
+      navigate("/"); // Redirect on success
+    } catch (error) {
+      console.error("Error updating car:", error);
+      alert("Failed to update car details. Please try again.");
+    }
   };
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading car details: {error.message}</p>;
 
   return (
     <div className="flex flex-col items-center">
@@ -82,10 +91,12 @@ function UpdateCarForm() {
             Update Your Car Details
           </div>
         </div>
+
         <h1 className="text-base text-gray-600 font-bold flex items-center gap-1">
           <AiOutlineExclamationCircle /> Car Details
         </h1>
         <div className="border-b border-gray-500 mt-1"></div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
             <label className="block text-gray-500 font-medium">Make</label>
@@ -93,10 +104,7 @@ function UpdateCarForm() {
               type="text"
               name="make"
               value={formData.make}
-              onChange={(e) => {
-                handleChange(e);
-                setFormData((prevData) => ({ ...prevData, model: "", variant: "" }));
-              }}
+              onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
             />
@@ -108,10 +116,7 @@ function UpdateCarForm() {
               type="text"
               name="model"
               value={formData.model}
-              onChange={(e) => {
-                handleChange(e);
-                setFormData((prevData) => ({ ...prevData, variant: "" }));
-              }}
+              onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
             />
@@ -144,6 +149,16 @@ function UpdateCarForm() {
 
         <div>
           <label className="block text-gray-500 font-medium">Insurance Document</label>
+          {formData.insurance && (
+            <a
+              href={`http://localhost:3000/uploads/${formData.insurance}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              View current document
+            </a>
+          )}
           <input
             type="file"
             name="insurance"
@@ -154,11 +169,21 @@ function UpdateCarForm() {
 
         <div>
           <label className="block text-gray-500 font-medium">Owner's ID Card</label>
+          {formData.id_card && (
+            <a
+              href={`http://localhost:3000/uploads/${formData.id_card}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              View current document
+            </a>
+          )}
           <input
             type="file"
             name="id_card"
             onChange={handleChange}
-            className="w-full mt-1 p-2"
+            className="w-full mt-1 p-2 outline-none"
           />
         </div>
 

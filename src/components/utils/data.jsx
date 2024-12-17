@@ -41,6 +41,23 @@ export const sidebarItems = [
 		],
 	},
 	{
+		title: "Driver",
+		icon: <FaClipboardList />,
+		subSections: [
+	
+			{
+				title: "Driver Detail",
+				path: "/Driver-Detail",
+				icon: <TbBrandBooking />,
+			},
+			{
+				title: "Driver List",
+				path: "/Driver-DetailList",
+				icon: <CiBoxList />,
+			},
+		],
+	},
+	{
 		title: "Cars",
 		icon: <FaCarSide />,
 		subSections: [
