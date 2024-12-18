@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useCreateBookingMutation } from "../../store/slices/bookingsApi";
 import DriverDetails from "../driverDetail/carDriver";
 import { useGetAllCarsQuery } from "../../store/slices/carsApiSlice";
+import { useGetAllDriversQuery } from "../../store/slices/driverApiSlice";
 
 function CarBookingForm() {
   const [createBooking] = useCreateBookingMutation();
   const { data: carsData, error, isLoading, refetch } = useGetAllCarsQuery();
+  const { data: driverData, isLoading: isDriversLoading, error: driverError } = useGetAllDriversQuery();
+
   const [formData, setFormData] = useState({
-    registration_no: "",
+    car_id: "",
     username: "",
     company_name: "",
     start_date: "",
@@ -17,7 +20,7 @@ function CarBookingForm() {
     price_per_month: 0,
     agreement: null,
     car_pictures: null,
-    with_driver: false,
+    with_driver: false, // Indicates whether a driver is selected
     driver_details: {
       id: "",
       name: "",
@@ -35,10 +38,28 @@ function CarBookingForm() {
   };
 
   const handleDriverChange = (e) => {
-    const { name, value } = e.target;
+    const selectedDriverId = e.target.value;
+    const selectedDriver = driverData?.data?.find(driver => driver.id === selectedDriverId);
+
+    if (selectedDriver) {
+      setFormData((prevData) => ({
+        ...prevData,
+        driver_details: {
+          id: selectedDriver.id,
+          name: selectedDriver.name,
+          license: selectedDriver.license,
+          identity_card_number: selectedDriver.identity_card_number,
+        },
+      }));
+    }
+  };
+
+  const handleDriverToggle = (e) => {
+    const { checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      driver_details: { ...prevData.driver_details, [name]: value },
+      with_driver: checked,
+      driver_details: checked ? prevData.driver_details : {} // Clear driver details if "With Driver" is unchecked
     }));
   };
 
@@ -47,6 +68,10 @@ function CarBookingForm() {
     try {
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((key) => {
+        if (key === "driver_details" && !formData.with_driver) {
+          // Don't send driver details if "With Driver" is not checked
+          return;
+        }
         if (key === "driver_details") {
           Object.keys(formData.driver_details).forEach((subKey) => {
             formDataToSend.append(`driver_details[${subKey}]`, formData.driver_details[subKey]);
@@ -75,8 +100,16 @@ function CarBookingForm() {
     return <p>Loading cars...</p>;
   }
 
+  if (isDriversLoading) {
+    return <p>Loading drivers...</p>;
+  }
+
   if (error) {
     return <p>Error fetching cars: {error.message}</p>;
+  }
+
+  if (driverError) {
+    return <p>Error fetching drivers: {driverError.message}</p>;
   }
 
   return (
@@ -107,11 +140,11 @@ function CarBookingForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div className="col-span-1">
             <label className="block text-gray-500 font-medium">
-              Registration No
+              Car Registration No
             </label>
             <select
-              name="registration_no"
-              value={formData.registration_no}
+              name="car_id"
+              value={carsData.car_id}
               onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
@@ -119,7 +152,7 @@ function CarBookingForm() {
               <option value="">Select Registration No</option>
               {carsData?.data?.length > 0 ? (
                 carsData.data.map((car) => (
-                  <option value={car.registration_no} key={car.id}>
+                  <option value={car.car_id} key={car.id}>
                     {car.registration_no}
                   </option>
                 ))
@@ -225,34 +258,39 @@ function CarBookingForm() {
             name="car_pictures"
             onChange={handleChange}
             className="w-full mt-1 p-2"
+            multiple
             required
           />
         </div>
 
-        <div className="flex items-center mt-4">
+        {/* With Driver Checkbox */}
+        <div className="mt-4 flex items-center gap-2">
           <input
             type="checkbox"
             name="with_driver"
             checked={formData.with_driver}
-            onChange={handleChange}
-            className="mr-2"
+            onChange={handleDriverToggle}
+            className="rounded-md"
           />
-          <label className="text-gray-500 font-medium">With Driver</label>
+          <label className="text-gray-500">With Driver</label>
         </div>
 
+        {/* Driver Details (Conditionally rendered) */}
         {formData.with_driver && (
           <DriverDetails
-            driverDetails={formData.driver_details}
+            driverData={driverData}
             onChange={handleDriverChange}
           />
         )}
 
-        <button
-          type="submit"
-          className="w-full bg-[#192236] text-white py-2 rounded-md mt-4"
-        >
-          Submit
-        </button>
+        <div className="mt-4">
+          <button
+            type="submit"
+            className="w-full py-2 bg-[#192236] text-white rounded-md"
+          >
+            Submit Booking
+          </button>
+        </div>
       </form>
     </div>
   );

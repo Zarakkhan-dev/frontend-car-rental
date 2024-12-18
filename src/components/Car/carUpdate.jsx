@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { useGetAllCarsQuery, useUpdateCarMutation } from "../../store/slices/carsApiSlice";
+import { useGetCarByIdQuery, useUpdateCarMutation } from "../../store/slices/carsApiSlice";
+
 
 function UpdateCarForm() {
-  const { id } = useParams();
+  const { id } = useParams(); // Get car ID from URL
   const navigate = useNavigate();
-  const [updateCar] = useUpdateCarMutation();
+
+  const [updateCar,] = useUpdateCarMutation();
+  const { carDetails, error, isLoading } = useGetCarByIdQuery(id); 
+  console.log("car details",carDetails);
+  
 
   const [formData, setFormData] = useState({
     make: "",
@@ -17,19 +22,16 @@ function UpdateCarForm() {
     id_card: null,
   });
 
-  // Fetch car details from the API
-  const  { data: carDetails, error, isLoading } = useGetAllCarsQuery(id);
-console.log("show update car details",carDetails);
-
   useEffect(() => {
     if (carDetails) {
+      const documents = carDetails.documents || {};
       setFormData({
-        make: carDetails.make,
-        model: carDetails.model,
-        variant: carDetails.variant,
-        registration_no: carDetails.registration_no,
-        insurance: carDetails.documents?.insurance || null,
-        id_card: carDetails.documents?.id_card || null,
+        make: carDetails.make || "",
+        model: carDetails.model || "",
+        variant: carDetails.variant || "",
+        registration_no: carDetails.registration_no || "",
+        insurance: documents.insurance || null,
+        id_card: documents.id_card || null,
       });
     }
   }, [carDetails]);
@@ -39,7 +41,7 @@ console.log("show update car details",carDetails);
     if (files) {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: files[0],
+        [name]: files[0], // Save file object
       }));
     } else {
       setFormData((prevData) => ({
@@ -51,18 +53,20 @@ console.log("show update car details",carDetails);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!carDetails.make || !carDetails.model || !carDetails.registration_no) {
-      alert("Please fill in all required fields.");
+    const requiredFields = ["make", "model", "registration_no"];
+    const missingFields = requiredFields.filter((field) => !formData[field]);
+
+    if (missingFields.length > 0) {
+      alert(`Please fill in the following required fields: ${missingFields.join(", ")}`);
       return;
     }
 
     try {
       const formDataToSend = new FormData();
-      for (const key in formData) {
-        formDataToSend.append(key, formData[key]);
-      }
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value) formDataToSend.append(key, value);
+      });
 
-      // Send form data to the server
       await updateCar({ id, formData: formDataToSend }).unwrap();
       alert("Car details updated successfully!");
       navigate("/"); // Redirect on success
@@ -72,7 +76,7 @@ console.log("show update car details",carDetails);
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading car details...</p>;
   if (error) return <p>Error loading car details: {error.message}</p>;
 
   return (
@@ -130,7 +134,6 @@ console.log("show update car details",carDetails);
               value={formData.variant}
               onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-              required
             />
           </div>
 
@@ -151,7 +154,7 @@ console.log("show update car details",carDetails);
           <label className="block text-gray-500 font-medium">Insurance Document</label>
           {formData.insurance && (
             <a
-              href={`http://localhost:3000/uploads/${formData.insurance}`}
+              href={formData.insurance}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 underline"
@@ -171,7 +174,7 @@ console.log("show update car details",carDetails);
           <label className="block text-gray-500 font-medium">Owner's ID Card</label>
           {formData.id_card && (
             <a
-              href={`http://localhost:3000/uploads/${formData.id_card}`}
+              href={formData.id_card}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 underline"

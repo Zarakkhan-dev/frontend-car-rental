@@ -7,6 +7,10 @@ import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 function DriverDetailsTable() {
   const { data: driversData, error, isLoading, refetch } = useGetAllDriversQuery();
   const [deleteDriver] = useDeleteDriverMutation();
+  
+
+  console.log("drivers details",driversData);
+  
 
   useEffect(() => {
     refetch();
@@ -41,8 +45,8 @@ function DriverDetailsTable() {
             </tr>
           </thead>
           <tbody>
-            {driversData.data && driversData.data.length > 0 ? (
-              driversData.data.map((detail, index) => {
+            {driversData.data.drivers && driversData.data.drivers.length > 0 ? (
+              driversData.data.drivers.map((detail, index) => {
                 return (
                   <tr
                     key={detail.id}

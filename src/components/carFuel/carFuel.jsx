@@ -1,56 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useCreateFuelingMutation } from '../../store/slices/fuelingApiSlice';
+import { useGetAllCarsQuery } from '../../store/slices/carsApiSlice';
 
 const FuelingAndMaintenanceForm = () => {
-  const [createFueling, { isLoading, isError, isSuccess, error }] = useCreateFuelingMutation();
+  const [createFueling] = useCreateFuelingMutation();
+  const { data: carsData, isLoading, isError, isSuccess, error } = useGetAllCarsQuery();
+  console.log("carsData", carsData);
 
   // State for fueling
   const [fuelingData, setFuelingData] = useState({
     booking_id: '',
-    customer_paid: '', // Corrected field
+    customer_paid: false, // Changed to boolean
     verified: false,
     total_amount_paid: 0.0,
     remaining_amount_left: 0.0,
     bill_paid: false,
   });
 
+  console.log("fueling data ", fuelingData);
+
   // Handle changes for fueling data
   const handleFuelingChange = (e) => {
     const { name, type, value, checked } = e.target;
-  
-    // Convert customer_paid to boolean
+
+    // Convert customer_paid to boolean correctly
     const processedValue =
       name === "customer_paid" ? (value === "Customer" ? true : false) : value;
-  
+
     setFuelingData({
       ...fuelingData,
       [name]: type === "checkbox" ? checked : processedValue,
     });
   };
-  
 
   // Submit form data
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(fuelingData);
+
       // Trigger the create fueling mutation
-      console.log(fuelingData)
       const response = await createFueling({
         booking_id: fuelingData.booking_id,
-        customer_paid: fuelingData.customer_paid_by, // Incorrect field name
+        customer_paid: fuelingData.customer_paid, // Ensure it's boolean
         verified: fuelingData.verified,
-        total_amount_paid: fuelingData.total_amount_paid,
-        remaining_amount_left: fuelingData.remaining_amount_left,
+        total_amount_paid: parseFloat(fuelingData.total_amount_paid), // Ensure it's a valid number
+        remaining_amount_left: parseFloat(fuelingData.remaining_amount_left), // Ensure it's a valid number
         bill_paid: fuelingData.bill_paid
-    }).unwrap();
-    
-    console.log("resonse of fuliling", response)
+      }).unwrap();
+
+      console.log("response of fueling", response);
 
       if (response.status === "success") {
         setFuelingData({
           booking_id: "",
-          customer_paid: "",
+          customer_paid: false, // Reset to default
           verified: false,
           total_amount_paid: 0.0,
           remaining_amount_left: 0.0,
@@ -89,34 +94,45 @@ const FuelingAndMaintenanceForm = () => {
         </h2>
         <div className="border-b border-gray-500 mt-1"></div>
 
-        {/* Booking ID */}
-        <div>
-          <label className="block text-gray-500 font-medium mt-2">Booking ID</label>
-          <input
-            type="text"
+        {/* Car Booking No */}
+        <div className="col-span-1">
+          <label className="block text-gray-500 font-medium">
+            Car Booking No
+          </label>
+          <select
             name="booking_id"
             value={fuelingData.booking_id}
             onChange={handleFuelingChange}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
             required
-          />
+          >
+            <option value="">Select Registration No</option>
+            {carsData?.data?.length > 0 ? (
+              carsData.data.map((car) => (
+                <option value={car.id} key={car.id}> {/* Changed to `car.id` for booking_id */}
+                  {car.registration_no}
+                </option>
+              ))
+            ) : (
+              <option value="null">No cars found</option>
+            )}
+          </select>
         </div>
 
         {/* Customer Paid */}
         <div>
           <label className="block text-gray-500 font-medium mt-2">Paid By</label>
           <select
-  name="customer_paid"
-  value={fuelingData.customer_paid ? "Customer" : "Owner"}
-  onChange={handleFuelingChange}
-  className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-  required
->
-  <option value="">Select</option>
-  <option value="Customer">Customer</option>
-  <option value="Owner">Owner</option>
-</select>
-
+            name="customer_paid"
+            value={fuelingData.customer_paid ? "Customer" : "Owner"}
+            onChange={handleFuelingChange}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="">Select</option>
+            <option value="Customer">Customer</option>
+            <option value="Owner">Owner</option>
+          </select>
         </div>
 
         {/* Verified */}
@@ -184,7 +200,6 @@ const FuelingAndMaintenanceForm = () => {
         </button>
 
         {isError && <p className="text-red-500 mt-2">{error?.data?.message || "Error occurred"}</p>}
-        {isSuccess && <p className="text-green-500 mt-2">Fueling data submitted successfully!</p>}
       </form>
     </div>
   );

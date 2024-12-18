@@ -1,60 +1,45 @@
-import { useState, useEffect } from "react";
-import { useParams,} from "react-router-dom";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
+import React, { useState } from "react";
+import {  useUpdateDriverMutation } from "../../store/slices/driverApiSlice";
 
-function UpdateCarForm() {
-  const { id } = useParams();
-  alert(id)
+function updateDriverForm() {
+  const [updateDriver, { isLoading, isError, isSuccess, error }] =
+    useUpdateDriverMutation();
 
   const [formData, setFormData] = useState({
-    make: "",
-    model: "",
-    variant: "",
-    registration_no: "",
-    insurance: null,
-    id_card: null,
+    name: "",
+    license: "",
+    identity_card: "",
+    phone_number: "",
   });
 
-  useEffect(() => {
-    // Fetch existing car details based on `id` and populate formData
-    const fetchCarDetails = async () => {
-      const response = await fetch(`/api/cars/${id}`); // Replace with actual API endpoint
-      const data = await response.json();
-      setFormData({
-        make: data.make,
-        model: data.model,
-        variant: data.variant,
-        registration_no: data.registration_no,
-        insurance: data.insurance,
-        id_card: data.id_card,
-      });
-    };
-
-    fetchCarDetails();
-  }, [id]);
-
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-
-    if (files) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
+    try {
+      const response = await createDriver(formData).unwrap();
+      
+      if (response.status === "success") {
+        setFormData({
+          name: "",
+          license: "",
+          identity_card: "",
+          phone_number: "",
+        });
+        alert("Driver details successfully added");
+      } else {
+        alert("Internal Error");
+      }
+    } catch (err) {
+      console.error("Error submitting driver details:", err);
+      alert("Failed to submit driver details. Please try again.");
     }
   };
 
@@ -64,57 +49,14 @@ function UpdateCarForm() {
         onSubmit={handleSubmit}
         className="p-6 bg-gray-200 rounded-md shadow-lg w-full"
       >
-        <div className="w-full h-56 overflow-hidden rounded-md relative mb-6">
-          <img
-            src="https://deinfa.com/wp-content/uploads/2024/09/Corolla-vs-Civic-Which-is-the-Best-Compact-Car-in-2024-Featured-Image.jpg"
-            alt="Car"
-            className="object-cover w-full h-full"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-2xl font-bold">
-            Update Your Car Details
-          </div>
-        </div>
-        <h1 className="text-base text-gray-600 font-bold flex items-center gap-1">
-          <AiOutlineExclamationCircle /> Car Details
-        </h1>
-        <div className="border-b border-gray-500 mt-1"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <h1 className="text-base text-gray-600 font-bold mb-4">Driver Details</h1>
+        
+        <div className="grid grid-cols-1 gap-4 mb-6">
           <div>
-            <label className="block text-gray-500 font-medium">Make</label>
+            <label className="block text-gray-500 font-medium">Driver Name</label>
             <input
-              type="text"
-              name="make"
-              value={formData.make}
-              onChange={(e) => {
-                handleChange(e);
-                setFormData((prevData) => ({ ...prevData, model: "", variant: "" }));
-              }}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-500 font-medium">Model</label>
-            <input
-              type="text"
-              name="model"
-              value={formData.model}
-              onChange={(e) => {
-                handleChange(e);
-                setFormData((prevData) => ({ ...prevData, variant: "" }));
-              }}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-500 font-medium">Variant</label>
-            <input
-              type="text"
-              name="variant"
-              value={formData.variant}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
@@ -122,11 +64,31 @@ function UpdateCarForm() {
           </div>
 
           <div>
-            <label className="block text-gray-500 font-medium">Registration Number</label>
+            <label className="block text-gray-500 font-medium">License</label>
             <input
-              type="text"
-              name="registration_no"
-              value={formData.registration_no}
+              name="license"
+              value={formData.license}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-500 font-medium">Identity Card</label>
+            <input
+              name="identity_card"
+              value={formData.identity_card}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-500 font-medium">Phone Number</label>
+            <input
+              name="phone_number"
+              value={formData.phone_number}
               onChange={handleChange}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none"
               required
@@ -134,35 +96,23 @@ function UpdateCarForm() {
           </div>
         </div>
 
-        <div>
-          <label className="block text-gray-500 font-medium">Insurance Document</label>
-          <input
-            type="file"
-            name="insurance"
-            onChange={handleChange}
-            className="w-full mt-1 p-2 outline-none"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-500 font-medium">Owner's ID Card</label>
-          <input
-            type="file"
-            name="id_card"
-            onChange={handleChange}
-            className="w-full mt-1 p-2"
-          />
-        </div>
+        {isLoading && <p className="text-blue-500">Submitting...</p>}
+        {isError && (
+          <p className="text-red-500">
+            Error: {error?.data?.message || "Submission failed"}
+          </p>
+        )}
 
         <button
           type="submit"
           className="w-full bg-[#192236] text-white py-2 rounded-md mt-4"
+          disabled={isLoading}
         >
-          Update Car Details
+          Submit
         </button>
       </form>
     </div>
   );
 }
 
-export default UpdateCarForm;
+export default updateDriverForm;

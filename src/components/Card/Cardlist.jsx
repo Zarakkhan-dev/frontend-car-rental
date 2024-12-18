@@ -65,15 +65,15 @@ function CardPaymentList() {
                   <td className="px-4 py-3 border-t border-gray-200">{card.bank_name}</td>
                   <td className="px-4 py-3 border-t border-gray-200">{card.holder_name}</td>
                   <td className="px-4 py-3 border-t border-gray-200">{card.card_number}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${card.card_charge}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.card_charge}</td>
                   <td className="px-4 py-3 border-t border-gray-200">
                     {new Date(card.due_date).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 border-t border-gray-200">${card.year_fee}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.year_fee}</td>
                   <td className="px-4 py-3 border-t border-gray-200">{card.status}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${card.paid_amount}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${card.extra_pay}</td>
-                  <td className="px-4 py-3 border-t border-gray-200">${card.less_pay}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.paid_amount}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.extra_pay}</td>
+                  <td className="px-4 py-3 border-t border-gray-200">{card.less_pay}</td>
                   <td className="px-4 py-3 border-t border-gray-200 flex gap-3 text-center">
                     <Link
                       to={`/CardUpdate/${card.id}`}

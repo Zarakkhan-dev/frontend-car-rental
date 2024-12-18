@@ -25,6 +25,8 @@ import CarMaintenanceUpdate from "./components/Carmaintenance/maintainenceUpdate
 import DriverDetailsForm from "./components/Driver/Driver";
 import DriverDetailsTable from "./components/Driver/driverList";
 
+
+
 const router = createBrowserRouter([
 	{
 		path:"/login",
@@ -98,7 +100,7 @@ const router = createBrowserRouter([
 			{
 				path: "/UpdateDriverForm/:id",
 
-				element: <UpdateCarForm />,
+				element: <updateDriverForm />,
 			},
 			{
 				path: "/card-Details",
