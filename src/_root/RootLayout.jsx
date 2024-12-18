@@ -4,9 +4,9 @@ import { Outlet } from "react-router-dom";
 
 
 import { ToastContainer } from "react-toastify";
-import SideBar from "../Components/sidebar/sideBar";
-import MobileMenu from "../Components/sidebar/mobileMenu";
-import Navbar from "../Components/navbar";
+import SideBar from "../components/sidebar/sideBar";
+import MobileMenu from "../components/sidebar/mobileMenu";
+import Navbar from "../components/navbar";
 
 const RootLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(true);

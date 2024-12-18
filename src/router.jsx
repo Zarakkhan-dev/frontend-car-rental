@@ -1,29 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "./Components/auth/Login";
-import ProtectedRoute from "./Components/protectedRoutes";
+import Login from "./components/auth/Login"; // Adjust path and case if necessary
+import ProtectedRoute from "./components/protectedRoutes";
 
-import Dashboard from "./Components/Dashboard/dashBoard";
-import CarBookingForm from "./Components/Carbooking/carBooking";
-import CarDetailsForm from "./Components/Car/Car";
+import Dashboard from "./components/Dashboard/dashBoard";
+import CarBookingForm from "./components/Carbooking/carBooking";
+import CarDetailsForm from "./components/Car/Car";
 
-import FuelingAndMaintenanceForm from "./Components/CarFuel/carFuel";
-import CarMaintenanceForm from "./Components/Carmaintenance/carMaintainance";
-import CarBookingList from "./Components/Carbooking/carBookingList";
-import CarDetailsTable from "./Components/Car/carList";
-import CardPaymentList from "./Components/Card/cardList";
-import FuelingList from "./Components/CarFuel/carFuelingList";
+import FuelingAndMaintenanceForm from "./components/CarFuel/carFuel";
+import CarMaintenanceForm from "./components/Carmaintenance/carMaintainance";
+import CarBookingList from "./components/Carbooking/carBookingList";
+import CarDetailsTable from "./components/Car/carList";
+import CardPaymentList from "./components/Card/cardList";
+import FuelingList from "./components/CarFuel/carFuelingList";
 
-import CardDetails from "./Components/Card/Card";
-import SignUpForm from "./Components/Signup/signUp";
+import CardDetails from "./components/Card/Card";
+import SignUpForm from "./components/Signup/signUp";
 import RootLayout from "./_root/RootLayout";
-import CarMaintenenceList from "./Components/Carmaintenance/carMaintenanceList";
-import UpdateCarForm from "./Components/Car/carUpdate";
-import CarBookingUpdate from "./Components/carBooking/bookingUpdate";
-import CardUpdate from "./Components/Card/cardUpdate";
-import FuelingUpdate from "./Components/carFuel/fuelUpdate";
-import CarMaintenanceUpdate from "./Components/Carmaintenance/maintainenceUpdate";
-import DriverDetailsForm from "./Components/Driver/Driver";
-import DriverDetailsTable from "./Components/Driver/driverList";
+import CarMaintenenceList from "./components/Carmaintenance/carMaintenanceList";
+import UpdateCarForm from "./components/Car/carUpdate";
+import CarBookingUpdate from "./components/carBooking/bookingUpdate";
+import CardUpdate from "./components/Card/cardUpdate";
+import FuelingUpdate from "./components/carFuel/fuelUpdate";
+import CarMaintenanceUpdate from "./components/Carmaintenance/maintainenceUpdate";
+import DriverDetailsForm from "./components/Driver/Driver";
+import DriverDetailsTable from "./components/Driver/driverList";
 
 
 

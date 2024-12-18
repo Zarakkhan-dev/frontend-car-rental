@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import CarBookingForm from './Components/Carbooking/carBooking';
-import CarDetailsForm from './Components/Car/Car';
-import FuelingAndMaintenanceForm from './Components/CarFuel/carFuel';
-import CardDetails from './Components/Card';
-import CarMaintenanceForm from './Components/Carmaintenance/carMaintainance';
-import AuthPage from './Components/auth/authPage';
+import CarBookingForm from './components/Carbooking/carBooking';
+import CarDetailsForm from './components/Car/Car';
+import FuelingAndMaintenanceForm from './components/CarFuel/carFuel';
+import CardDetails from './components/Card';
+import CarMaintenanceForm from './components/Carmaintenance/carMaintainance';
+import AuthPage from './components/auth/authPage';
 
 function HomePage() {
   return (
