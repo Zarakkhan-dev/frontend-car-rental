@@ -50,8 +50,6 @@ const router = createBrowserRouter([
 				path: "/",
 				element: <Dashboard />,
 			},
-
-			
 			{
 				path: "/car-booking",
 
@@ -139,12 +137,10 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/maintenance-List",
-
 				element: <CarMaintenenceList />,
 			},
 			{
 				path: "/CarMaintenanceUpdate/:id",
-
 				element: <CarMaintenanceUpdate />,
 			},
 			
