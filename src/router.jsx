@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import LoginPage from "./Components/auth/Login";
+import Login from "./Components/auth/Login";
 import ProtectedRoute from "./Components/protectedRoutes";
 
 import Dashboard from "./Components/Dashboard/dashBoard";
@@ -30,7 +30,7 @@ import DriverDetailsTable from "./Components/Driver/driverList";
 const router = createBrowserRouter([
 	{
 		path:"/login",
-		element:<LoginPage/>
+		element:<Login/>
 	},
 		{
 				path: "/SignUp",

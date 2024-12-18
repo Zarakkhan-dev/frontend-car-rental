@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useLoginMutation } from "../../store/slices/userApiSlice";
 
-const LoginPage = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -110,4 +110,4 @@ const [login] = useLoginMutation();
   );
 };
 
-export default LoginPage;
+export default Login;
