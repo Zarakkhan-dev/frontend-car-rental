@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Popper from "@mui/material/Popper";
 import Fade from "@mui/material/Fade";
 import Paper from "@mui/material/Paper";
-import { sidebarItems } from "../../Components/utils/data";
+import { sidebarItems } from "../utils/data";
 import logo from '../../assets/logo/logo-side.png'
 
 const SideBar = ({ isSidebarOpen }) => {

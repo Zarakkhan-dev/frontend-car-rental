@@ -16,14 +16,14 @@ import FuelingList from "./Components/CarFuel/carFuelingList";
 import CardDetails from "./Components/Card/Card";
 import SignUpForm from "./Components/Signup/signUp";
 import RootLayout from "./_root/RootLayout";
-import CarMaintenenceList from "./components/Carmaintenance/carMaintenanceList";
-import UpdateCarForm from "./components/Car/carUpdate";
-import CarBookingUpdate from "./components/carBooking/bookingUpdate";
-import CardUpdate from "./components/Card/cardUpdate";
-import FuelingUpdate from "./components/carFuel/fuelUpdate";
-import CarMaintenanceUpdate from "./components/Carmaintenance/maintainenceUpdate";
-import DriverDetailsForm from "./components/Driver/Driver";
-import DriverDetailsTable from "./components/Driver/driverList";
+import CarMaintenenceList from "./Components/Carmaintenance/carMaintenanceList";
+import UpdateCarForm from "./Components/Car/carUpdate";
+import CarBookingUpdate from "./Components/carBooking/bookingUpdate";
+import CardUpdate from "./Components/Card/cardUpdate";
+import FuelingUpdate from "./Components/carFuel/fuelUpdate";
+import CarMaintenanceUpdate from "./Components/Carmaintenance/maintainenceUpdate";
+import DriverDetailsForm from "./Components/Driver/Driver";
+import DriverDetailsTable from "./Components/Driver/driverList";
 
 
 
