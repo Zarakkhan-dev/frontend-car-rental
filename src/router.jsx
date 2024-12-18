@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Login from "./components/auth/Login"; // Adjust path and case if necessary
 import ProtectedRoute from "./components/protectedRoutes";
 
-import Dashboard from "./components/Dashboard/dashBoard";
+import Dashboard from "./components/DashBoard/Dashboard.jsx";
 import CarBookingForm from "./components/Carbooking/carBooking";
 import CarDetailsForm from "./components/Car/Car";
 
